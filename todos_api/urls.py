@@ -1,6 +1,10 @@
-from django.urls import path
+from django.urls import path,include
 from . import views
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register('employeesViewSet',views.EmployeeViewSet,basename='employeeviewSet')
+router.register('employeesModelViewSet',views.EmployeeModelViewSet,basename='employeeModelSet')
 
 urlpatterns = [
     path('todosView/',views.todosView),
@@ -12,5 +16,6 @@ urlpatterns = [
     path('employeeDetailViewMixin/<int:pk>/',views.employeeDetailViewMixin.as_view()),
     path('employeesGenericsMixin/',views.employeesGenericsMixin.as_view()),
     path('employeesDetailsGenericsMixin/<int:pk>/',views.employeesDetailsGenericsMixin.as_view()),
+    path('',include(router.urls)),
 ]
 

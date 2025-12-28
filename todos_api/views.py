@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,JsonResponse
 from todos.models import Task
 from .serializers import TaskSerializer,EmployeeSerializer
@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from todos_Employee.models import Employee
 from django.http import Http404
-from rest_framework import mixins,generics
+from rest_framework import mixins,generics,viewsets
 # Create your views here.
 
 @api_view(['GET','POST'])
@@ -122,6 +122,43 @@ class employeesDetailsGenericsMixin(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EmployeeSerializer
     lookup_field = 'pk'
 
+#with the help of ViewSet
+class EmployeeViewSet(viewsets.ViewSet):
+    def list(self,request):
+        queryset = Employee.objects.all()
+        serializer = EmployeeSerializer(queryset,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    def create(self,request):
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
+    
+    def retrieve(self,request,pk=None):
+        employee = get_object_or_404(Employee,pk=pk)
+        serializer = EmployeeSerializer(employee)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    def update(self,request,pk=None):
+        employee = get_object_or_404(Employee,pk=pk)
+        serializer = EmployeeSerializer(employee,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
+    
+    def delete(self,request,pk=None):
+        employee = get_object_or_404(Employee,pk=pk)
+        employee.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+#with the help of ModelViewSet
+class EmployeeModelViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
 
 
 

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'todos_api',
     'todos_Employee',
+    'blogs',
 ]
 
 MIDDLEWARE = [
