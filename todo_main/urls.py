@@ -23,4 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home,name='home'),
     path('todos/',include('todos.urls')),
+    #Api Endpoint
+    path('api/v1/',include('todos_api.urls')),
+    path('api/v1/employee/',include('todos_Employee.urls')),
 ]
