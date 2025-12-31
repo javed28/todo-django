@@ -9,6 +9,10 @@ from rest_framework.views import APIView
 from todos_Employee.models import Employee
 from django.http import Http404
 from rest_framework import mixins,generics,viewsets
+from blogs.models import Blog,Comment
+from blogs.serializers import BlogsSerializer,CommentsSerializer
+from todos_Employee.filters import EmployeeFilter
+from rest_framework.filters import SearchFilter,OrderingFilter
 # Create your views here.
 
 @api_view(['GET','POST'])
@@ -159,7 +163,30 @@ class EmployeeViewSet(viewsets.ViewSet):
 class EmployeeModelViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    #filterset_fields = ['designation']
+    filterset_class = EmployeeFilter
 
+class BlogsView(generics.ListCreateAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogsSerializer
+    filter_backends = [SearchFilter,OrderingFilter]
+    search_fields = ['blog_title','blog_body']
+    ordering_fields = ['id']
+    
+
+class CommentsView(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentsSerializer
+
+class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogsSerializer
+    lookup_field = 'pk'
+
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentsSerializer
+    lookup_field = 'pk'
 
 
 

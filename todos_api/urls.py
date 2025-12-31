@@ -17,5 +17,10 @@ urlpatterns = [
     path('employeesGenericsMixin/',views.employeesGenericsMixin.as_view()),
     path('employeesDetailsGenericsMixin/<int:pk>/',views.employeesDetailsGenericsMixin.as_view()),
     path('',include(router.urls)),
+    path('blogs/',views.BlogsView.as_view()),
+    path('comments/',views.CommentsView.as_view()),
+    path('blog/<int:pk>/',views.BlogDetailView.as_view()),
+    path('comment/<int:pk>/',views.CommentDetailView.as_view()),
+
 ]
 
